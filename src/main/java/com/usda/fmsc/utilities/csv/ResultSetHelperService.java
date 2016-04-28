@@ -256,7 +256,7 @@ public class ResultSetHelperService implements ResultSetHelper {
             boolean b = rs.getBoolean(colIndex);
             value = Boolean.valueOf(b).toString();
             break;
-         case NCLOB: // todo : use rs.getNClob
+         case NCLOB:
          case Types.CLOB:
             Clob c = rs.getClob(colIndex);
             if (c != null) {
@@ -291,9 +291,9 @@ public class ResultSetHelperService implements ResultSetHelper {
          case Types.TIMESTAMP:
             value = handleTimestamp(rs.getTimestamp(colIndex), timestampFormatString);
             break;
-         case NVARCHAR: // todo : use rs.getNString
-         case NCHAR: // todo : use rs.getNString
-         case LONGNVARCHAR: // todo : use rs.getNString
+         case NVARCHAR:
+         case NCHAR:
+         case LONGNVARCHAR:
          case Types.LONGVARCHAR:
          case Types.VARCHAR:
          case Types.CHAR:
