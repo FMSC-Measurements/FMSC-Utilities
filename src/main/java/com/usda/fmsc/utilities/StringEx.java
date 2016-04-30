@@ -1,10 +1,12 @@
 package com.usda.fmsc.utilities;
 
+import android.text.TextUtils;
+
 public class StringEx {
     public static final String Empty = "";
 
     public static boolean isEmpty(String value) {
-        return value == null || value.equals(Empty);
+        return TextUtils.isEmpty(value);
     }
 
     public static boolean isEmpty(String value, boolean trim) {
