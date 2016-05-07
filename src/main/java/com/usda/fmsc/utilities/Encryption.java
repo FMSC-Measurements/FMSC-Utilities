@@ -1,5 +1,7 @@
 package com.usda.fmsc.utilities;
 
+import android.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -21,7 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 public class Encryption {
 
     public static SecretKey generateKey(String key) throws NoSuchAlgorithmException, NoSuchProviderException, UnsupportedEncodingException {
-        return generateKey(key.getBytes("UTF-8"));
+        return generateKey(Base64.decode(key, Base64.DEFAULT));
     }
 
     public static SecretKey generateKey(byte[] key) throws NoSuchAlgorithmException, NoSuchProviderException {
