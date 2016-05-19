@@ -89,4 +89,9 @@ public class StringEx {
     public static String sanitizeForFile(String str) {
         return str.replaceAll("[:\\\\/*?|<>]", "_");
     }
+
+
+    public static String getValueOrEmpty(String value) {
+        return value == null ? Empty : value;
+    }
 }
