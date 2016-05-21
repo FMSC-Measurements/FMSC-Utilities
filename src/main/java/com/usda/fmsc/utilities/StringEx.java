@@ -42,6 +42,22 @@ public class StringEx {
         }
     }
 
+    public static String toString(Float value) {
+        if (value != null) {
+            return Float.toString(value);
+        } else {
+            return StringEx.Empty;
+        }
+    }
+
+    public static String toString(Float value, int decimals) {
+        if (value != null) {
+            return String.format("%." + decimals + "f", value);
+        } else {
+            return StringEx.Empty;
+        }
+    }
+
     public static String toString(Integer value) {
         if (value != null) {
             return Integer.toString(value);

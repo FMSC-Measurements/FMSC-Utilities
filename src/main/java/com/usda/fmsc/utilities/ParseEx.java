@@ -1,7 +1,31 @@
 package com.usda.fmsc.utilities;
 
 public class ParseEx {
-    
+
+    public static Float parseFloat(String input) {
+        Float value = null;
+
+        try {
+            value = Float.parseFloat(input);
+        } catch (NumberFormatException e) {
+
+        }
+
+        return value;
+    }
+
+    public static Float parseFloat(String input, Float defaultValue) {
+        Float value = defaultValue;
+
+        try {
+            value = Float.parseFloat(input);
+        } catch (NumberFormatException e) {
+
+        }
+
+        return value;
+    }
+
     public static Double parseDouble(String input) {
         Double value = null;
 
@@ -103,6 +127,25 @@ public class ParseEx {
             case "no":
             default:
                 return defaultValue;
+        }
+    }
+
+
+    public static boolean Int(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    public static boolean Double(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
         }
     }
 }
