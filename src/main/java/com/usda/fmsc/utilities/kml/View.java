@@ -19,7 +19,7 @@ public class View {
     private Double Heading;
     private Double Tilt;
     private double Range;
-    private Types.AltitudeMode AltMode;
+    private Types.AltitudeMode AltMode = Types.AltitudeMode.clampToGround;
 
 
     public View() {

@@ -216,7 +216,7 @@ public class KmlWriter extends XmlWriter {
                     sb.append(String.format("%f,%f", c.getLongitude(), c.getLatitude()));
 
                     if (c.getAltitude() != null)
-                        sb.append(String.format(",%f", c.getAltitude()));
+                        sb.append(String.format(",%f ", c.getAltitude()));
                     else
                         sb.append(" ");
 
@@ -238,7 +238,7 @@ public class KmlWriter extends XmlWriter {
                         sb.append(String.format("%f,%f", c.getLongitude(), c.getLatitude()));
 
                         if (c.getAltitude() != null)
-                            sb.append(String.format(",%f", c.getAltitude()));
+                            sb.append(String.format(",%f ", c.getAltitude()));
                         else
                             sb.append(" ");
 
@@ -259,7 +259,7 @@ public class KmlWriter extends XmlWriter {
                     sb.append(String.format("%f,%f", c.getLongitude(), c.getLatitude()));
 
                     if (c.getAltitude() != null)
-                        sb.append(String.format(",%f", c.getAltitude()));
+                        sb.append(String.format(",%f ", c.getAltitude()));
                     else
                         sb.append(" ");
 

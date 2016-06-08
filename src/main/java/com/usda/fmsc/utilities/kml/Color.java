@@ -111,20 +111,12 @@ public class Color {
 
 
     public String toStringRGBA() {
-        return String.format("%s%s%s%s",
-                Integer.toHexString(r),
-                Integer.toHexString(g),
-                Integer.toHexString(b),
-                Integer.toHexString(alpha));
+        return String.format("%02x%02x%02x%02x", r, g, b, alpha);
     }
 
     //ABGR klm color is reversed
     @Override
     public String toString() {
-        return String.format("%s%s%s%s",
-                Integer.toHexString(alpha),
-                Integer.toHexString(b),
-                Integer.toHexString(g),
-                Integer.toHexString(r));
+        return String.format("%02x%02x%02x%02x", alpha, b, g, r);
     }
 }
