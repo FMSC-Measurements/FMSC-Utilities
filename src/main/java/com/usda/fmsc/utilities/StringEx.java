@@ -2,16 +2,24 @@ package com.usda.fmsc.utilities;
 
 import android.text.TextUtils;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+
 public class StringEx {
     public static final String Empty = "";
+    private static DecimalFormat df = new DecimalFormat("#.##########");
+    private static DecimalFormat dfe = new DecimalFormat("#.##########");
+
 
     public static boolean isEmpty(String value) {
         return TextUtils.isEmpty(value);
     }
 
     public static boolean isEmpty(String value, boolean trim) {
-        return value == null || value.trim().length() < 1;
+        return value == null || trim && value.trim().length() < 1 || value.length() < 1;
     }
+
 
     public static String subString(String string, int start, int length) {
         if (string.length() >= start && length > 0) {
@@ -28,7 +36,7 @@ public class StringEx {
 
     public static String toString(Double value) {
         if (value != null) {
-            return Double.toString(value);
+            return df.format(value);
         } else {
             return StringEx.Empty;
         }
@@ -36,15 +44,21 @@ public class StringEx {
 
     public static String toString(Double value, int decimals) {
         if (value != null) {
-            return String.format("%." + decimals + "f", value);
+            dfe.setMaximumFractionDigits(decimals);
+            return dfe.format(value);
         } else {
             return StringEx.Empty;
         }
     }
 
+    public static String toStringRound(Double value, int decimals) {
+        return toString(round(value, decimals), decimals);
+    }
+
+
     public static String toString(Float value) {
         if (value != null) {
-            return Float.toString(value);
+            return df.format(value);
         } else {
             return StringEx.Empty;
         }
@@ -52,11 +66,17 @@ public class StringEx {
 
     public static String toString(Float value, int decimals) {
         if (value != null) {
-            return String.format("%." + decimals + "f", value);
+            dfe.setMaximumFractionDigits(decimals);
+            return dfe.format(value);
         } else {
             return StringEx.Empty;
         }
     }
+
+    public static String toStringRound(Float value, int decimals) {
+        return toString(round(value, decimals), decimals);
+    }
+
 
     public static String toString(Integer value) {
         if (value != null) {
@@ -66,6 +86,7 @@ public class StringEx {
         }
     }
 
+
     public static String toString(Boolean value) {
         if (value != null) {
             return Boolean.toString(value);
@@ -73,6 +94,7 @@ public class StringEx {
             return StringEx.Empty;
         }
     }
+
 
     public static boolean isWhitespace(String str) {
         if (str == null) {
@@ -102,6 +124,7 @@ public class StringEx {
         return true;
     }
 
+
     public static String sanitizeForFile(String str) {
         return str.replaceAll("[:\\\\/*?|<>]", "_");
     }
@@ -109,5 +132,28 @@ public class StringEx {
 
     public static String getValueOrEmpty(String value) {
         return value == null ? Empty : value;
+    }
+
+
+    private static Double round(Double value, int decimalPlaces) {
+        if (decimalPlaces < 0) throw new IllegalArgumentException();
+
+        if (value == null)
+            return null;
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    private static Float round(Float value, int decimalPlaces) {
+        if (decimalPlaces < 0) throw new IllegalArgumentException();
+
+        if (value == null)
+            return null;
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
+        return bd.floatValue();
     }
 }
