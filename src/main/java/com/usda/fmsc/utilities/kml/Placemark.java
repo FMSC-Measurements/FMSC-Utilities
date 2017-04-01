@@ -2,7 +2,7 @@ package com.usda.fmsc.utilities.kml;
 
 import java.util.ArrayList;
 
-public class Placemark {
+public class Placemark extends Properties {
     private ArrayList<Polygon> Polygons;
     private ArrayList<Point> Points;
     private String CN;
@@ -10,20 +10,35 @@ public class Placemark {
     private String Desctription;
     private String StyleUrl;
     private View View;
-    private Properties Properties;
     private Boolean Visibility;
     private Boolean Open;
 
 
     public Placemark(String name) {
-        this(name, null, null);
+        setup(name, null, null);
     }
 
     public Placemark(String name, String desc) {
-        this(name, desc, null);
+        setup(name, desc, null);
     }
 
     public Placemark(String name, String desc, View v) {
+        setup(name, desc, v);
+    }
+
+    public Placemark(Placemark pm) {
+        super(pm);
+        setup(pm.Name, pm.Desctription, new View(pm.View));
+
+        StyleUrl = pm.StyleUrl;
+        Visibility = pm.Visibility;
+        Open = pm.Open;
+
+        Polygons = pm.getPolygons();
+        Points = pm.getPoints();
+    }
+
+    private void setup(String name, String desc, View v) {
         Name = name;
         View = v;
 
@@ -36,18 +51,6 @@ public class Placemark {
 
         Polygons = new ArrayList<>();
         Points = new ArrayList<>();
-    }
-
-    public Placemark(Placemark pm) {
-        this(pm.Name, pm.Desctription, new View(pm.View));
-
-        StyleUrl = pm.StyleUrl;
-        Properties = new Properties(pm.Properties);
-        Visibility = pm.Visibility;
-        Open = pm.Open;
-
-        Polygons = pm.getPolygons();
-        Points = pm.getPoints();
     }
 
 
@@ -160,14 +163,6 @@ public class Placemark {
 
     public void setView(com.usda.fmsc.utilities.kml.View view) {
         View = view;
-    }
-
-    public com.usda.fmsc.utilities.kml.Properties getProperties() {
-        return Properties;
-    }
-
-    public void setProperties(com.usda.fmsc.utilities.kml.Properties properties) {
-        Properties = properties;
     }
 
     public Boolean getVisibility() {

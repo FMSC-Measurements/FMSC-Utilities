@@ -2,7 +2,7 @@ package com.usda.fmsc.utilities.kml;
 
 import java.util.ArrayList;
 
-public class Folder {
+public class Folder extends Properties {
     private ArrayList<Folder> SubFolders;
     private ArrayList<Placemark> Placemarks;
     
@@ -10,7 +10,6 @@ public class Folder {
     private String Name;
     private String Desctription;
     private String StyleUrl;
-    private Properties Properties;
     private Boolean Open;
     private Boolean Visibility;
 
@@ -27,6 +26,10 @@ public class Folder {
         Placemarks = new ArrayList<Placemark>();
 
         Desctription = desc;
+    }
+
+    public Folder(Folder folder) {
+        super(folder);
     }
 
 
@@ -140,15 +143,7 @@ public class Folder {
         StyleUrl = styleUrl;
     }
 
-    public com.usda.fmsc.utilities.kml.Properties getProperties() {
-        return Properties;
-    }
-
-    public void setProperties(com.usda.fmsc.utilities.kml.Properties properties) {
-        Properties = properties;
-    }
-
-    public Boolean getOpen() {
+    public Boolean isOpen() {
         return Open;
     }
 

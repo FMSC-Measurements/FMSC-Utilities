@@ -16,11 +16,10 @@ public class KmlWriter extends XmlWriter {
         startDocument("UTF-8", null);
 
         setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-        //setProperty("http://xmlpull.org/v1/doc/properties.html#serializer-indentation", "    ");
 
         startElement("kml");
-        attribute("xlmns", "http://www.opengis.net/kml/2.2");
-        attribute("xlmns:gx", "http://www.google.com/kml/ext/2.2");
+        attribute("xmlns", "http://www.opengis.net/kml/2.2");
+        attribute("xmlns:gx", "http://www.google.com/kml/ext/2.2");
     }
 
     public void writeEndKml() throws IOException {
@@ -50,7 +49,7 @@ public class KmlWriter extends XmlWriter {
             writeElement("open", convertBool(doc.isOpen()));
         }
 
-        writeProperties(doc.getProperties());
+        writeProperties(doc);
 
         for (Style style : doc.getStyles()) {
             writeStyle(style);
@@ -86,10 +85,10 @@ public class KmlWriter extends XmlWriter {
             if (folder.getVisibility() != null)
                 writeElement("visibility", convertBool(folder.getVisibility()));
             
-            if (folder.getOpen() != null)
-                writeElement("open", convertBool(folder.getOpen()));
+            if (folder.isOpen() != null)
+                writeElement("open", convertBool(folder.isOpen()));
 
-            writeProperties(folder.getProperties());
+            writeProperties(folder);
 
             for (Folder subFolder : folder.getSubFolders()) {
                 writeFolder(subFolder);
@@ -149,7 +148,7 @@ public class KmlWriter extends XmlWriter {
             if (pm.isOpen() != null)
                 writeElement("open", convertBool(pm.isOpen()));
 
-            writeProperties(pm.getProperties());
+            writeProperties(pm);
 
 
             if (points != null && polygons != null ) {
@@ -171,9 +170,7 @@ public class KmlWriter extends XmlWriter {
                         writePolygon(polygons.get(0));
                     } else if (points.size() > 0) {
                         writePoint(points.get(0));
-                    } //else {
-                        //just point and polys for now
-                    //}
+                    }
                 }
             }
 

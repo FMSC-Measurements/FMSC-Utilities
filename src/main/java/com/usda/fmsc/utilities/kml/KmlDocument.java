@@ -1,105 +1,43 @@
 package com.usda.fmsc.utilities.kml;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
-public class KmlDocument {
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+public class KmlDocument extends Folder {
     private ArrayList<Style> Styles;
     private ArrayList<StyleMap> StyleMaps;
-    private ArrayList<Folder> SubFolders;
-    private ArrayList<Placemark> Placemarks;
-    private String CN;
-    
-    private String Name;
-    private String Desctription;
-    private String StyleUrl;
-    private Properties Properties;
-    private Boolean Open;
-    private Boolean Visibility;
 
 
     public KmlDocument() {
-        this(null, null);
+        super(null, null);
     }
 
     public KmlDocument(String name) {
-        this(name, null);
+        super(name, null);
     }
 
     public KmlDocument(String name, String desc) {
-        Name = name;
-        Desctription = desc;
-        CN = java.util.UUID.randomUUID().toString();
-
-        Styles = new ArrayList<Style>();
-        StyleMaps = new ArrayList<StyleMap>();
-        SubFolders = new ArrayList<Folder>();
-        Placemarks = new ArrayList<Placemark>();
+        super(name, desc);
     }
 
-
-    public void addFolder(Folder f) {
-        if(f != null && f.getCN() != null)
-            SubFolders.add(f);
+    public KmlDocument(Folder folder) {
+        super(folder);
     }
 
-    public void removeFolder(String cn) {
-        for (int i = 0; i < SubFolders.size(); i++) {
-            if (SubFolders.get(i).getCN().equals(cn)) {
-                SubFolders.remove(i);
-                return;
-            }
-        }
-    }
+    public KmlDocument(KmlDocument doc) {
+        super(doc);
 
-    public Folder getFolder(String cn) {
-        for(Folder folder : SubFolders) {
-            if (folder.getCN().equals(cn))
-                return folder;
-        }
-
-        return null;
-    }
-
-    public Folder getFolderByName(String name) {
-        for (Folder folder : SubFolders) {
-            if (folder.getName().equals(name))
-                return folder;
-        }
-
-        return null;
-    }
-
-
-    public void addPlacemark(Placemark p) {
-        if (p != null && p.getCN() != null)
-            Placemarks.add(p);
-    }
-
-    public void removePlacemark(String cn) {
-        for (int i = 0; i < Placemarks.size(); i++) {
-            if (Placemarks.get(i).getCN().equals(cn)) {
-                Placemarks.remove(i);
-                return;
-            }
-        }
-    }
-
-    public Placemark getPlacemark(String cn) {
-        for (Placemark pm : Placemarks) {
-            if (pm.getCN().equals(cn))
-                return pm;
-        }
-
-        return null;
-    }
-
-    public Placemark getPlacemarkByName(String name) {
-        for (Placemark pm : Placemarks) {
-            if (pm.getName().equals(name))
-                return pm;
-        }
-
-        return null;
+        Styles = new ArrayList<>(doc.getStyles());
+        StyleMaps = new ArrayList<>(doc.getStyleMaps());
     }
 
 
@@ -159,64 +97,21 @@ public class KmlDocument {
         return StyleMaps;
     }
 
-    public ArrayList<Folder> getSubFolders() {
-        return SubFolders;
+
+    public static KmlDocument load(String filename) throws IOException, ParserConfigurationException, SAXException {
+
+        File fXmlFile = new File(filename);
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+        Document doc = dBuilder.parse(fXmlFile);
+
+
+
+        return null;
     }
 
-    public ArrayList<Placemark> getPlacemarks() {
-        return Placemarks;
-    }
 
-
-    public String getCN() {
-        return CN;
-    }
-
-    public String getName() {
-        return Name;
-    }
-
-    public void setName(String name) {
-        Name = name;
-    }
-
-    public String getDesctription() {
-        return Desctription;
-    }
-
-    public void setDesctription(String desctription) {
-        Desctription = desctription;
-    }
-
-    public String getStyleUrl() {
-        return StyleUrl;
-    }
-
-    public void setStyleUrl(String styleUrl) {
-        StyleUrl = styleUrl;
-    }
-
-    public com.usda.fmsc.utilities.kml.Properties getProperties() {
-        return Properties;
-    }
-
-    public void setProperties(com.usda.fmsc.utilities.kml.Properties properties) {
-        Properties = properties;
-    }
-
-    public Boolean isOpen() {
-        return Open;
-    }
-
-    public void setOpen(Boolean open) {
-        Open = open;
-    }
-
-    public Boolean getVisibility() {
-        return Visibility;
-    }
-
-    public void setVisible(Boolean visibility) {
-        Visibility = visibility;
+    private static Folder parseFolder(Node node) {
+        return null;
     }
 }
