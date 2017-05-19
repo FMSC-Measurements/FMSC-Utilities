@@ -13,8 +13,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 public class KmlDocument extends Folder {
-    private ArrayList<Style> Styles;
-    private ArrayList<StyleMap> StyleMaps;
+    private ArrayList<Style> Styles = new ArrayList<>();
+    private ArrayList<StyleMap> StyleMaps = new ArrayList<>();
 
 
     public KmlDocument() {
