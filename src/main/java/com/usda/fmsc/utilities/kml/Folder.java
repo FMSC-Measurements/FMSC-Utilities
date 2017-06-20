@@ -8,7 +8,7 @@ public class Folder extends Properties {
     
     private String CN;
     private String Name;
-    private String Desctription;
+    private String Description;
     private String StyleUrl;
     private Boolean Open;
     private Boolean Visibility;
@@ -22,10 +22,10 @@ public class Folder extends Properties {
         Name = name;
         CN = java.util.UUID.randomUUID().toString();
 
-        SubFolders = new ArrayList<Folder>();
-        Placemarks = new ArrayList<Placemark>();
+        SubFolders = new ArrayList<>();
+        Placemarks = new ArrayList<>();
 
-        Desctription = desc;
+        Description = desc;
     }
 
     public Folder(Folder folder) {
@@ -127,12 +127,12 @@ public class Folder extends Properties {
         Name = name;
     }
 
-    public String getDesctription() {
-        return Desctription;
+    public String getDescription() {
+        return Description;
     }
 
-    public void setDesctription(String desctription) {
-        Desctription = desctription;
+    public void setDescription(String description) {
+        Description = description;
     }
 
     public String getStyleUrl() {

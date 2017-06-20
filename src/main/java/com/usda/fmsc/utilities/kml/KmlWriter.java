@@ -39,7 +39,7 @@ public class KmlWriter extends XmlWriter {
         }
         endElement();
 
-        writeDescription(doc.getDesctription());
+        writeDescription(doc.getDescription());
 
         if (doc.getVisibility() != null) {
             writeElement("visibility", convertBool(doc.getVisibility()));
@@ -77,7 +77,7 @@ public class KmlWriter extends XmlWriter {
             comment("Folder Guid: " + folder.getCN());
 
             writeElement("name", folder.getName());
-            writeDescription(folder.getDesctription());
+            writeDescription(folder.getDescription());
 
             if(folder.getStyleUrl() != null)
                 writeElement("styleUrl", folder.getStyleUrl());

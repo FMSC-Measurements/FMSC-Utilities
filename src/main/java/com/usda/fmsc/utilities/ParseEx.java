@@ -3,15 +3,7 @@ package com.usda.fmsc.utilities;
 public class ParseEx {
 
     public static Float parseFloat(String input) {
-        Float value = null;
-
-        try {
-            value = Float.parseFloat(input);
-        } catch (NumberFormatException e) {
-
-        }
-
-        return value;
+        return parseFloat(input, null);
     }
 
     public static Float parseFloat(String input, Float defaultValue) {
@@ -27,15 +19,7 @@ public class ParseEx {
     }
 
     public static Double parseDouble(String input) {
-        Double value = null;
-
-        try {
-            value = Double.parseDouble(input);
-        } catch (NumberFormatException e) {
-            
-        }
-
-        return value;
+        return parseDouble(input, null);
     }
 
     public static Double parseDouble(String input, Double defaultValue) {
@@ -51,15 +35,7 @@ public class ParseEx {
     }
 
     public static Integer parseInteger(String input) {
-        Integer value = null;
-
-        try {
-            value = Integer.parseInt(input);
-        } catch (NumberFormatException e) {
-
-        }
-
-        return value;
+        return parseInteger(input, null);
     }
 
     public static Integer parseInteger(String input, Integer defaultValue) {
@@ -75,15 +51,7 @@ public class ParseEx {
     }
 
     public static Long parseLong(String input) {
-        Long value = null;
-
-        try {
-            value = Long.parseLong(input);
-        } catch (NumberFormatException e) {
-
-        }
-
-        return value;
+        return parseLong(input, null);
     }
 
     public static Long parseLong(String input, Long defaultValue) {
@@ -98,20 +66,8 @@ public class ParseEx {
         return value;
     }
 
-    public static boolean parseBoolean(String input) {
-        switch (input.toLowerCase()) {
-            case "1":
-            case "true":
-            case "t":
-            case "yes":
-                return true;
-            case "0":
-            case "false":
-            case "f":
-            case "no":
-            default:
-                return false;
-        }
+    public static Boolean parseBoolean(String input) {
+        return parseBoolean(input, null);
     }
 
     public static Boolean parseBoolean(String input, Boolean defaultValue) {
@@ -127,25 +83,6 @@ public class ParseEx {
             case "no":
             default:
                 return defaultValue;
-        }
-    }
-
-
-    public static boolean Int(String value) {
-        try {
-            Integer.parseInt(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-
-    public static boolean Double(String value) {
-        try {
-            Double.parseDouble(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
         }
     }
 }
