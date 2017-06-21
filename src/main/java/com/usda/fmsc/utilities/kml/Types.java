@@ -49,4 +49,17 @@ public class Types {
         relativeToSeaFloor,
         absolute
     }
+
+    public static class Parse {
+        public static AltitudeMode AltitudeMode(String mode) {
+            switch (mode) {
+                case "clampToSeaFloor": return AltitudeMode.clampToSeaFloor;
+                case "relativeToGround": return AltitudeMode.relativeToGround;
+                case "relativeToSeaFloor": return AltitudeMode.relativeToSeaFloor;
+                case "absolute": return AltitudeMode.absolute;
+                case "clampToGround":
+                default: return AltitudeMode.clampToGround;
+            }
+        }
+    }
 }

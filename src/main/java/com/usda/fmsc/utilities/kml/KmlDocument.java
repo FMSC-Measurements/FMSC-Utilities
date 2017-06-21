@@ -4,6 +4,7 @@ import com.usda.fmsc.utilities.FileUtils;
 import com.usda.fmsc.utilities.ParseEx;
 import com.usda.fmsc.utilities.StringEx;
 
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -189,8 +190,25 @@ public class KmlDocument extends Folder {
                 case "region": properties.setRegion(node.getTextContent()); break;
                 case "extendeddata": {
 
+                    NodeList edNodes = node.getChildNodes();
 
+                    ExtendedData extendedData = new ExtendedData();
 
+                    for (int j = 0; j < edNodes.getLength(); j++) {
+                        node = edNodes.item(j);
+                        if (node.getNodeName().toLowerCase().equals("data")) {
+                            try {
+                                extendedData.add(new ExtendedData.Data(
+                                        node.getAttributes().getNamedItem("name").getTextContent(),
+                                        node.getTextContent()
+                                ));
+                            } catch (DOMException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    properties.setExtendedData(extendedData);
                     break;
                 }
             }
@@ -213,20 +231,151 @@ public class KmlDocument extends Folder {
         return null;
     }
 
-    private static Polygon parsePolygon(Node node) {
-        return null;
+    private static Polygon parsePolygon(Node polyNode) {
+        Polygon poly = null;
+
+        NamedNodeMap map = polyNode.getAttributes();
+        if (map != null) {
+            Node id = map.getNamedItem("id");
+            if (id != null) {
+                poly = new Polygon(id.getTextContent());
+            }
+        }
+
+        boolean isPolyLine = polyNode.getNodeName().equalsIgnoreCase("linestring");
+
+        if (poly == null) {
+            poly = new Polygon(isPolyLine ? "PolyLine" : "Polygon");
+        }
+
+        NodeList nodes = polyNode.getChildNodes();
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            switch (node.getNodeName().toLowerCase()) {
+                case "extrude": poly.setExtrude(ParseEx.parseBoolean(node.getTextContent())); break;
+                case "tessellate": poly.setExtrude(ParseEx.parseBoolean(node.getTextContent())); break;
+                case "altitudemode":
+                case "gx:altitudemode": poly.setAltMode(Types.Parse.AltitudeMode(node.getTextContent())); break;
+                case "coordinates": poly.setOuterBoundary(getCoordinates(node.getTextContent())); break;
+                case "outerBoundaryIs": poly.setOuterBoundary(getCoordinates(node.getChildNodes().item(0).getTextContent())); break;
+                case "innerBoundaryIs": poly.setInnerBoundary(getCoordinates(node.getChildNodes().item(0).getTextContent())); break;
+            }
+        }
+
+        return poly;
     }
 
-    private static Point parsePoint(Node node) {
-        return null;
+    private static ArrayList<Coordinates> getCoordinates(String coordsStr) {
+        String[] coordsList = coordsStr.split(" ");
+        String[] values;
+        ArrayList<Coordinates> coords = new ArrayList<>();
+
+        for (int i = 0; i < coordsList.length; i++) {
+            values = coordsList[i].split(",");
+
+            coords.add(values.length > 2 ?
+                    new Coordinates(
+                        ParseEx.parseDouble(values[1]),
+                        ParseEx.parseDouble(values[0]),
+                        ParseEx.parseDouble(values[2])) :
+                    new Coordinates(
+                        ParseEx.parseDouble(values[1]),
+                        ParseEx.parseDouble(values[0])));
+        }
+
+        return coords;
+    }
+
+    private static Point parsePoint(Node pointNode) {
+        Point point = new Point();
+
+        NamedNodeMap map = pointNode.getAttributes();
+        if (map != null) {
+            Node id = map.getNamedItem("id");
+            if (id != null) {
+                point.setName(id.getTextContent());
+            }
+        }
+
+        NodeList nodes = pointNode.getChildNodes();
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            switch (node.getNodeName().toLowerCase()) {
+                case "extrude": point.setExtrude(ParseEx.parseBoolean(node.getTextContent())); break;
+                case "altitudemode":
+                case "gx:altitudemode": point.setAltMode(Types.Parse.AltitudeMode(node.getTextContent())); break;
+                case "coordinates": {
+                    String[] values = node.getTextContent().split(",");
+
+                    point.setCoordinates(
+                            values.length > 2 ?
+                            new Coordinates(
+                                ParseEx.parseDouble(values[1]),
+                                ParseEx.parseDouble(values[0]),
+                                ParseEx.parseDouble(values[2])) :
+                            new Coordinates(
+                                ParseEx.parseDouble(values[1]),
+                                ParseEx.parseDouble(values[0]))
+                    );
+                    break;
+                }
+            }
+        }
+
+        return point;
     }
 
     private static Style parseStyle(Node node) {
         return null;
     }
 
-    private static StyleMap parseStyleMap(Node node) {
-        return null;
+    private static StyleMap parseStyleMap(Node styleMapNode) {
+        StyleMap styleMap = new StyleMap();
+
+        NamedNodeMap map = styleMapNode.getAttributes();
+        if (map != null) {
+            Node id = map.getNamedItem("id");
+            if (id != null) {
+                styleMap = new StyleMap(id.getTextContent());
+            }
+        }
+
+        NodeList nodes = styleMapNode.getChildNodes();
+
+        String key = null;
+        String url = null;
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            if (node.getNodeName().toLowerCase().equals("pair")) {
+                NodeList pairNodes = node.getChildNodes();
+                for (int j = 0; j < pairNodes.getLength(); j++) {
+                    node = pairNodes.item(j);
+                    switch (node.getNodeName().toLowerCase()) {
+                        case "key": key = node.getTextContent(); break;
+                        case "styleurl": url = node.getTextContent(); break;
+                    }
+                }
+
+                if (key != null && url != null) {
+                    if (key.equalsIgnoreCase("normal")) {
+                        styleMap.setNormalStyleUrl(url);
+                    } else if (key.equalsIgnoreCase("highlight")) {
+                        styleMap.setHightLightedStyleUrl(url);
+                    }
+
+                    key = null;
+                    url = null;
+                }
+            }
+        }
+
+        return styleMap;
     }
 
     private static View parseView(Node node) {
