@@ -81,6 +81,7 @@ public class ParseEx {
             case "false":
             case "f":
             case "no":
+                return false;
             default:
                 return defaultValue;
         }

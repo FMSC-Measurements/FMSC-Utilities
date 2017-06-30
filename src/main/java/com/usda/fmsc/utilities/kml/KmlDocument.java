@@ -4,6 +4,10 @@ import com.usda.fmsc.utilities.FileUtils;
 import com.usda.fmsc.utilities.ParseEx;
 import com.usda.fmsc.utilities.StringEx;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormatterBuilder;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -378,7 +382,67 @@ public class KmlDocument extends Folder {
         return styleMap;
     }
 
-    private static View parseView(Node node) {
-        return null;
+    private static View parseView(Node viewNode) {
+        View view = new View();
+
+        NodeList nodes = viewNode.getChildNodes();
+
+        Coordinates coordinates = new Coordinates(0d, 0d, 0d);
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            switch (node.getNodeName().toLowerCase()) {
+                case "gx:timespan": {
+                    NodeList subNodes = node.getChildNodes();
+                    com.usda.fmsc.utilities.kml.View.TimeSpan ts = new View.TimeSpan(null, null);
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+                        if (node.getNodeName().equalsIgnoreCase("begin")) {
+                            ts.StartTime = parseTime(node.getTextContent());
+                        } else if (node.getNodeName().equalsIgnoreCase("end")) {
+                            ts.EndTime = parseTime(node.getTextContent());
+                        }
+                    }
+
+                    if (ts.StartTime != null || ts.EndTime != null) {
+                        view.setTimeSpan(ts);
+                    }
+                    break;
+                }
+                case "gx:timestamp": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+                        if (node.getNodeName().equalsIgnoreCase("when")) {
+                            view.setTimeStamp(parseTime(node.getTextContent()));
+                        }
+                    }
+                    break;
+                }
+                case "longitude": coordinates.setLongitude(ParseEx.parseDouble(node.getTextContent())); break;
+                case "latitude": coordinates.setLatitude(ParseEx.parseDouble(node.getTextContent())); break;
+                case "altitude": coordinates.setAltitude(ParseEx.parseDouble(node.getTextContent())); break;
+                case "range": view.setRange(ParseEx.parseDouble(node.getTextContent())); break;
+                case "tilt": view.setTilt(ParseEx.parseDouble(node.getTextContent())); break;
+                case "heading": view.setHeading(ParseEx.parseDouble(node.getTextContent())); break;
+                case "altitudemode":
+                case "gx:altitudemode": view.setAltMode(Types.Parse.AltitudeMode(node.getTextContent())); break;
+            }
+        }
+
+        if (coordinates.getLatitude() != 0 || coordinates.getLongitude() != 0 || coordinates.getAltitude() != 0) {
+            view.setCoordinates(coordinates);
+        }
+
+        return view;
+    }
+
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-ddTHH:mm:ssZ");
+
+    private static DateTime parseTime(String text) {
+        return DateTime.parse(text, dateTimeFormatter);
     }
 }
