@@ -231,8 +231,41 @@ public class KmlDocument extends Folder {
         return folder;
     }
 
-    private static Placemark parsePlacemark(Node node) {
-        return null;
+    private static Placemark parsePlacemark(Node placemarkNodes) {
+        NodeList nodes = placemarkNodes.getChildNodes();
+
+        Placemark placemark = new Placemark("");
+
+        parsePropertyData(placemark, nodes);
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            switch (node.getNodeName().toLowerCase()) {
+                case "name": placemark.setName(node.getTextContent()); break;
+                case "description": placemark.setDescription(node.getTextContent()); break;
+                case "lookat": placemark.setView(parseView(node)); break;
+                case "styleUrl": placemark.setStyleUrl(node.getTextContent()); break;
+                case "visibility": placemark.setVisibility(ParseEx.parseBoolean(node.getTextContent())); break;
+                case "open": placemark.setOpen(ParseEx.parseBoolean(node.getTextContent())); break;
+                case "polygon": placemark.addPolygon(parsePolygon(node)); break;
+                case "point": placemark.addPoint(parsePoint(node)); break;
+                case "multigeometry": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "polygon": placemark.addPolygon(parsePolygon(node)); break;
+                            case "point": placemark.addPoint(parsePoint(node)); break;
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return placemark;
     }
 
     private static Polygon parsePolygon(Node polyNode) {
@@ -333,8 +366,145 @@ public class KmlDocument extends Folder {
         return point;
     }
 
-    private static Style parseStyle(Node node) {
-        return null;
+    private static Style parseStyle(Node stylNode) {
+        Style style = new Style();
+
+        NodeList nodes = stylNode.getChildNodes();
+
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+
+            switch (node.getNodeName().toLowerCase()) {
+                case "iconstyle": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "id": style.setIconID(node.getTextContent()); break;
+                            case "color": style.setIconColor(new Color(node.getTextContent())); break;
+                            case "icon": style.setIconID(node.getChildNodes().item(0).getTextContent()); break;
+                            case "scale": style.setIconScale(ParseEx.parseDouble(node.getTextContent())); break;
+                            case "colormode": style.setIconColorMode(Types.Parse.ColorMode(node.getTextContent())); break;
+                            case "heading": style.setIconHeading(ParseEx.parseDouble(node.getTextContent())); break;
+                            case "hotspot": {
+                                NodeList subNodes2 = node.getChildNodes();
+
+                                HotSpot hotSpot = new HotSpot(0, 0, Types.XYUnitType.fraction, Types.XYUnitType.fraction);
+
+                                for (int k = 0; k < subNodes2.getLength(); k++) {
+                                    node = subNodes2.item(j);
+
+                                    switch (node.getNodeName().toLowerCase()) {
+                                        case "x": hotSpot.setX(ParseEx.parseDouble(node.getTextContent())); break;
+                                        case "y": hotSpot.setY(ParseEx.parseDouble(node.getTextContent())); break;
+                                        case "xunits": hotSpot.setXUnits(Types.Parse.XYUnitType(node.getTextContent())); break;
+                                        case "yunits": hotSpot.setXUnits(Types.Parse.XYUnitType(node.getTextContent())); break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                case "labelstyle": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "id": style.setLabelID(node.getTextContent());
+                            case "color": style.setLineColor(new Color(node.getTextContent())); break;
+                            case "scale": style.setLineWidth(ParseEx.parseDouble(node.getTextContent())); break;
+                            case "colormode": style.setLineColorMode(Types.Parse.ColorMode(node.getTextContent())); break;
+                            case "gx:outercolor": style.setLineOuterColor(new Color(node.getTextContent())); break;
+                            case "gx:outerwidth": style.setLineOuterWidth(ParseEx.parseDouble(node.getTextContent())); break;
+                            case "gx:physicalwidth": style.setLinePhysicalWidth(ParseEx.parseDouble(node.getTextContent())); break;
+                            case "gx:labelVisibility": style.setLineLabelVisibility(ParseEx.parseBoolean(node.getTextContent())); break;
+                        }
+                    }
+                    break;
+                }
+                case "linestyle": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "id": style.setLineID(node.getTextContent());
+                            case "color": style.setLabelColor(new Color(node.getTextContent())); break;
+                            case "scale": style.setLabelScale(ParseEx.parseDouble(node.getTextContent())); break;
+                            case "colormode": style.setLabelColorMode(Types.Parse.ColorMode(node.getTextContent())); break;
+                        }
+                    }
+                    break;
+                }
+                case "polystyle": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "id": style.setPolygonID(node.getTextContent());
+                            case "color": style.setPolygonColor(new Color(node.getTextContent())); break;
+                            case "colormode": style.setPolygonColorMode(Types.Parse.ColorMode(node.getTextContent())); break;
+                            case "fill": style.setPolygonFill(ParseEx.parseBoolean(node.getTextContent())); break;
+                            case "outline": style.setPolygonOutline(ParseEx.parseBoolean(node.getTextContent())); break;
+                        }
+                    }
+                    break;
+                }
+                case "balloonstyle": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "id": style.setBalloonID(node.getTextContent());
+                            case "bgcolor": style.setBalloonBgColor(new Color(node.getTextContent())); break;
+                            case "textcolor": style.setBalloonTextColor(new Color(node.getTextContent())); break;
+                            case "text": style.setBalloonText(node.getTextContent()); break;
+                            case "displaymode": style.setBalloonDisplayMode(Types.Parse.DisplayMode(node.getTextContent())); break;
+                        }
+                    }
+                    break;
+                }
+                case "listitemtype": {
+                    NodeList subNodes = node.getChildNodes();
+
+                    for (int j = 0; j < subNodes.getLength(); j++) {
+                        node = subNodes.item(j);
+
+                        switch (node.getNodeName().toLowerCase()) {
+                            case "id": style.setListID(node.getTextContent());
+                            case "listitemtype": style.setListListItemType(Types.Parse.ListItemType(node.getTextContent()));
+                            case "bgcolor": style.setListBgColor(new Color(node.getTextContent())); break;
+                            case "itemicon": {
+                                    NodeList subNodes2 = node.getChildNodes();
+                                    for (int k = 0; k < subNodes2.getLength(); k++) {
+                                        node = subNodes2.item(k);
+
+                                        switch (node.getNodeName().toLowerCase()) {
+                                            case "state": style.setListItemState(Types.Parse.State(node.getTextContent())); break;
+                                            case "href": style.setListItemIconUrl(node.getTextContent());
+                                        }
+                                    }
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+            }
+        }
+
+        return style;
     }
 
     private static StyleMap parseStyleMap(Node styleMapNode) {

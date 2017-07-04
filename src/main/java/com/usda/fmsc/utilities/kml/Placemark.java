@@ -145,7 +145,7 @@ public class Placemark extends Properties {
         return Desctription;
     }
 
-    public void setDesctription(String desctription) {
+    public void setDescription(String desctription) {
         Desctription = desctription;
     }
 
