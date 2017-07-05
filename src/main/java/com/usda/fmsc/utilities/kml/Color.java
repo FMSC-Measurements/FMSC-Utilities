@@ -42,7 +42,7 @@ public class Color {
 
 
         while (i < color.length()) {
-            colors.add(color.substring(i, 2));
+            colors.add(color.substring(i, i + 2));
             i += 2;
         }
 

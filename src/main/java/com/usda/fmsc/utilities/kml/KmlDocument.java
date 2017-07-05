@@ -153,7 +153,7 @@ public class KmlDocument extends Folder {
             }
         }
 
-        return null;
+        return kdoc;
     }
 
     private static void parseFolderData(Folder folder, NodeList folderNodes) {
@@ -162,7 +162,7 @@ public class KmlDocument extends Folder {
 
             switch (node.getNodeName().toLowerCase()) {
                 case "folder": folder.addFolder(parseFolder(node)); break;
-                case "palcemark": folder.addPlacemark(parsePlacemark(node)); break;
+                case "placemark": folder.addPlacemark(parsePlacemark(node)); break;
                 case "name": folder.setName(node.getTextContent()); break;
                 case "description": folder.setDescription(node.getTextContent()); break;
                 case "styleurl": folder.setStyleUrl(node.getTextContent()); break;
@@ -296,8 +296,8 @@ public class KmlDocument extends Folder {
                 case "altitudemode":
                 case "gx:altitudemode": poly.setAltMode(Types.Parse.AltitudeMode(node.getTextContent())); break;
                 case "coordinates": poly.setOuterBoundary(getCoordinates(node.getTextContent())); break;
-                case "outerBoundaryIs": poly.setOuterBoundary(getCoordinates(node.getChildNodes().item(0).getTextContent())); break;
-                case "innerBoundaryIs": poly.setInnerBoundary(getCoordinates(node.getChildNodes().item(0).getTextContent())); break;
+                case "outerboundaryis": poly.setOuterBoundary(getCoordinates(node.getChildNodes().item(1).getChildNodes().item(1).getTextContent())); break;
+                case "innerboundaryis": poly.setInnerBoundary(getCoordinates(node.getChildNodes().item(1).getChildNodes().item(1).getTextContent())); break;
             }
         }
 
@@ -610,9 +610,10 @@ public class KmlDocument extends Folder {
         return view;
     }
 
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-ddTHH:mm:ssZ");
+    //private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-ddTHH:mm:ssZ");
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     private static DateTime parseTime(String text) {
-        return DateTime.parse(text, dateTimeFormatter);
+        return DateTime.parse(text.replace("T", " ").replace("Z", ""), dateTimeFormatter);
     }
 }
