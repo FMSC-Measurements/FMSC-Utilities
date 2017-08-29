@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.util.Locale;
 
 public class StringEx {
     public static final String Empty = "";
@@ -155,5 +156,10 @@ public class StringEx {
         BigDecimal bd = new BigDecimal(value);
         bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
         return bd.floatValue();
+    }
+
+
+    public static String format(String format, Object... args) {
+        return String.format(Locale.US, format, args);
     }
 }
