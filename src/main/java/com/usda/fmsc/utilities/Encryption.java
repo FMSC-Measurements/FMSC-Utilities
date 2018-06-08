@@ -22,7 +22,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class Encryption {
 
-    public static SecretKey generateKey(String key) throws NoSuchAlgorithmException, NoSuchProviderException, UnsupportedEncodingException {
+    public static SecretKey generateKey(String key) throws NoSuchAlgorithmException, NoSuchProviderException {
         return generateKey(Base64.decode(key, Base64.DEFAULT));
     }
 
@@ -62,7 +62,7 @@ public class Encryption {
     }
 
     public static byte[] encodeFile(byte[] key, byte[] fileData) throws
-            NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException,
+            NoSuchAlgorithmException, InvalidKeyException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
         SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
         Cipher cipher = Cipher.getInstance("AES");
@@ -85,7 +85,7 @@ public class Encryption {
     }
 
     public static byte[] decodeFile(byte[] key, byte[] fileData) throws
-            NoSuchAlgorithmException, NoSuchProviderException, InvalidKeyException,
+            NoSuchAlgorithmException, InvalidKeyException,
             NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
 
         SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");

@@ -35,19 +35,19 @@ public class XmlWriter {
         fileWriter.close();
     }
 
-    protected void setFeature(String name, boolean state) throws IOException {
+    protected void setFeature(String name, boolean state) {
         serializer.setFeature(name, state);
     }
 
-    protected boolean getFeature(String name) throws IOException {
+    protected boolean getFeature(String name) {
         return serializer.getFeature(name);
     }
 
-    protected void setProperty(String name, Object value) throws IOException {
+    protected void setProperty(String name, Object value) {
         serializer.setProperty(name, value);
     }
 
-    protected Object getProperty(String name) throws IOException {
+    protected Object getProperty(String name) {
         return serializer.getProperty(name);
     }
 
