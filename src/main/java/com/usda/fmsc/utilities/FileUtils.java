@@ -95,10 +95,15 @@ public class FileUtils {
         return path.substring(path.lastIndexOf('/') + 1);
     }
 
-    public static String getFileNameWoType(String path) {
+    public static String getFileNameWoExt(String path) {
         String filename = getFileName(path);
         return filename.substring(0, filename.lastIndexOf('.'));
     }
+
+    public static String getFilePathWoExt(String path) {
+        return path.substring(0, path.lastIndexOf('.'));
+    }
+
 
 
     public static boolean copyFile(String sourceFile, String destFile) {
