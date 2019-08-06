@@ -65,7 +65,7 @@ public class FileUtils {
 
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
-            byte data[] = new byte[BUFFER];
+            byte[] data = new byte[BUFFER];
 
             for(String file : files) {
                 FileInputStream fi = new FileInputStream(file);
