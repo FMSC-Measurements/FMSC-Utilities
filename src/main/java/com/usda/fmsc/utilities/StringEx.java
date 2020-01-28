@@ -27,7 +27,7 @@ public class StringEx {
             if (start + length < string.length()) {
                 return string.substring(start, length);
             } else {
-                return string.substring(start, string.length());
+                return string.substring(start);
             }
         }
 
