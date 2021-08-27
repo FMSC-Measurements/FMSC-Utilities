@@ -7,13 +7,14 @@ import com.usda.fmsc.utilities.gpx.GpxPoint.PointType;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.io.File;
 import java.io.IOException;
 
 public class GpxWriter extends XmlWriter {
     private static DateTimeFormatter dtf = DateTimeFormat.forPattern("M/d/yyyy h:mm:ss a");
 
-    public GpxWriter(String fileName) throws IOException {
-        super(fileName);
+    public GpxWriter(File file) throws IOException {
+        super(file);
     }
 
     public void writeStartGpx(GpxDocument doc) throws IOException {
@@ -276,8 +277,8 @@ public class GpxWriter extends XmlWriter {
     }
 
 
-    public static void createFile(GpxDocument document, String fileName) throws IOException {
-        GpxWriter writer = new GpxWriter(fileName);
+    public static void create(File file, GpxDocument document) throws IOException {
+        GpxWriter writer = new GpxWriter(file);
 
         writer.writeStartGpx(document);
         writer.writeDocument(document);

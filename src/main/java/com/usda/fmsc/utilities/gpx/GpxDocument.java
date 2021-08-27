@@ -173,8 +173,7 @@ public class GpxDocument {
     }
 
 
-    public static GpxDocument parseFile(String fileName) throws ParserConfigurationException, SAXException, IOException{
-        File file = new File(fileName);
+    public static GpxDocument parseFile(File file) throws ParserConfigurationException, SAXException, IOException{
 
         if (!file.exists() || file.isDirectory()) {
             throw new RuntimeException("Invalid File");

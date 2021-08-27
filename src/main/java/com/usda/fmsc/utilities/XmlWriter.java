@@ -4,19 +4,20 @@ import android.util.Xml;
 
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
 
 public class XmlWriter {
-    private XmlSerializer serializer;
-    private Stack<String> elements;
-    private FileWriter fileWriter;
+    private final XmlSerializer serializer;
+    private final Stack<String> elements;
+    private final FileWriter fileWriter;
 
-    public XmlWriter(String fileName) throws IOException {
+    public XmlWriter(File file) throws IOException {
         serializer = Xml.newSerializer();
 
-        fileWriter = new FileWriter(fileName);
+        fileWriter = new FileWriter(file);
         serializer.setOutput(fileWriter);
 
         elements = new Stack<>();

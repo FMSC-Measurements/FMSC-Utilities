@@ -1,5 +1,7 @@
 package com.usda.fmsc.utilities.kml;
 
+import android.net.Uri;
+
 import com.usda.fmsc.utilities.FileUtils;
 import com.usda.fmsc.utilities.ParseEx;
 import com.usda.fmsc.utilities.StringEx;
@@ -114,17 +116,13 @@ public class KmlDocument extends Folder {
     }
 
 
-    public static KmlDocument load(String filename) throws ParserConfigurationException, SAXException, IOException {
-        if (filename.endsWith(".kmz")) {
-            ZipFile zipFile = new ZipFile(filename);
+    public static KmlDocument load(File file) throws ParserConfigurationException, IOException, SAXException {
+        if (file.getPath().endsWith(".kmz")) {
+            ZipFile zipFile = new ZipFile(file);
             return load(new InputSource(zipFile.getInputStream(zipFile.entries().nextElement())));
         } else {
-            return load(new File(filename));
+            return load(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file));
         }
-    }
-
-    public static KmlDocument load(File file) throws ParserConfigurationException, IOException, SAXException {
-        return load(DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(file));
     }
 
     public static KmlDocument load(InputSource source) throws ParserConfigurationException, IOException, SAXException {

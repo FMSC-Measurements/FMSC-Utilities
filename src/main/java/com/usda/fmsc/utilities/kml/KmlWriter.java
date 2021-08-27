@@ -1,6 +1,8 @@
 package com.usda.fmsc.utilities.kml;
 
 import org.joda.time.DateTime;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -8,8 +10,8 @@ import com.usda.fmsc.utilities.kml.Types.*;
 import com.usda.fmsc.utilities.XmlWriter;
 
 public class KmlWriter extends XmlWriter {
-    public KmlWriter(String fileName) throws IOException {
-        super(fileName);
+    public KmlWriter(File file) throws IOException {
+        super(file);
     }
 
     public void writeStartKml() throws IOException {
@@ -622,8 +624,8 @@ public class KmlWriter extends XmlWriter {
     //endregion
 
 
-    public static void createFile(KmlDocument document, String fileName) throws IOException  {
-        KmlWriter writer = new KmlWriter(fileName);
+    public static void write(File file, KmlDocument document) throws IOException  {
+        KmlWriter writer = new KmlWriter(file);
 
         writer.writeStartKml();
         writer.writeDocument(document);

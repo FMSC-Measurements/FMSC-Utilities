@@ -157,9 +157,4 @@ public class StringEx {
         bd = bd.setScale(decimalPlaces, RoundingMode.HALF_UP);
         return bd.floatValue();
     }
-
-
-    public static String format(String format, Object... args) {
-        return String.format(Locale.US, format, args);
-    }
 }
