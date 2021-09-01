@@ -1,7 +1,7 @@
 package com.usda.fmsc.utilities.kml;
 
 public class StyleMap {
-    private String ID;
+    private final String ID;
 
     private String NormalStyleUrl;
     private String HightLightedStyleUrl;

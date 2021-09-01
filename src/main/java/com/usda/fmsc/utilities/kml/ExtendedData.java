@@ -49,7 +49,7 @@ public class ExtendedData {
 
     }
 
-    private ArrayList<Data> _DataItems;
+    private final ArrayList<Data> _DataItems;
 
     public ExtendedData() {
         _DataItems = new ArrayList<>();

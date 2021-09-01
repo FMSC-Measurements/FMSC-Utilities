@@ -3,7 +3,7 @@ package com.usda.fmsc.utilities.kml;
 import com.usda.fmsc.utilities.kml.Types.AltitudeMode;
 
 public class Point {
-    private String CN;
+    private final String CN;
     private AltitudeMode AltMode;
     private String Name;
     private Coordinates Coordinates;

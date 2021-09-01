@@ -609,7 +609,7 @@ public class KmlDocument extends Folder {
     }
 
     //private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-ddTHH:mm:ssZ");
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
     private static DateTime parseTime(String text) {
         return DateTime.parse(text.replace("T", " ").replace("Z", ""), dateTimeFormatter);

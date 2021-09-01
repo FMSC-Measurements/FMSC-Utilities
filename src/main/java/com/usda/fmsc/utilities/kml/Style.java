@@ -7,7 +7,7 @@ import com.usda.fmsc.utilities.kml.Types.State;
 
 public class Style {
 
-    private String   ID;
+    private final String   ID;
     private String   IconID;
     private String   IconUrl;
     private Color    IconColor;

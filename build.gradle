@@ -28,5 +28,4 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'joda-time:joda-time:2.10.10'
-    implementation 'androidx.documentfile:documentfile:1.0.1'
 }

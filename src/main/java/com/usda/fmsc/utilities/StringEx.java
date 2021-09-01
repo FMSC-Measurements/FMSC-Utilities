@@ -9,8 +9,8 @@ import java.util.Locale;
 
 public class StringEx {
     public static final String Empty = "";
-    private static DecimalFormat df = new DecimalFormat("#.##########");
-    private static DecimalFormat dfe = new DecimalFormat("#.##########");
+    private static final DecimalFormat df = new DecimalFormat("#.##########");
+    private static final DecimalFormat dfe = new DecimalFormat("#.##########");
 
 
     public static boolean isEmpty(String value) {

@@ -20,7 +20,7 @@ public class Polygon {
     }
 
     private AltitudeMode AltMode;
-    private String CN;
+    private final String CN;
 
     private String Name;
     private ArrayList<Coordinates> OuterBoundary;

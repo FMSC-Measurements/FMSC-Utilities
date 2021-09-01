@@ -11,7 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class GpxWriter extends XmlWriter {
-    private static DateTimeFormatter dtf = DateTimeFormat.forPattern("M/d/yyyy h:mm:ss a");
+    private static final DateTimeFormatter dtf = DateTimeFormat.forPattern("M/d/yyyy h:mm:ss a");
 
     public GpxWriter(File file) throws IOException {
         super(file);
