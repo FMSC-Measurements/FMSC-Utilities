@@ -111,14 +111,32 @@ public class FileUtils {
         FileOutputStream dest = new FileOutputStream(destZip);
         ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
-        int relativeStartingPathIndex = destZip.getAbsolutePath().lastIndexOf("/") + 1;
-
         for (File file : files) {
             if(file.isDirectory()) {
-                zipSubDir(out, file, relativeStartingPathIndex);
+                zipSubDir(out, file, null);
             } else {
                 try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(file))) {
-                    zipEntryFile(origin, out, file, relativeStartingPathIndex);
+                    zipEntryFile(origin, out, file, null);
+                }
+            }
+        }
+
+        out.close();
+    }
+
+    public static void zipFiles(File destZip, Tuple<File, File>... files) throws IOException {
+        if (destZip == null)
+            throw new NullPointerException("destZip");
+
+        FileOutputStream dest = new FileOutputStream(destZip);
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+        for (Tuple<File, File> fileT : files) {
+            if(fileT.Item1.isDirectory()) {
+                zipSubDir(out, fileT.Item1, fileT.Item2);
+            } else {
+                try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(fileT.Item1))) {
+                    zipEntryFile(origin, out, fileT.Item1, fileT.Item2);
                 }
             }
         }
@@ -137,33 +155,36 @@ public class FileUtils {
 
         try (ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(destZip)))) {
             if (source.isDirectory()) {
-                zipSubDir(out, source, relativeStartingPathIndex);
+                zipSubDir(out, source, null);
             } else {
                 try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(source))) {
-                    zipEntryFile(origin, out, source, relativeStartingPathIndex);
+                    zipEntryFile(origin, out, source, null);
                 }
             }
         }
     }
 
-    private static void zipSubDir(ZipOutputStream out, File dir, int relativeStartingPathIndex) throws IOException {
+    private static void zipSubDir(ZipOutputStream out, File dir, File zipInternalFolderPath) throws IOException {
         File[] files = dir.listFiles();
 
         if (files != null) {
             for (File file : files) {
                 if(file.isDirectory()) {
-                    zipSubDir(out, file, relativeStartingPathIndex);
+                    zipSubDir(out, file, new File(zipInternalFolderPath, dir.getName()));
                 } else {
                     try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(file))) {
-                        zipEntryFile(origin, out, file, relativeStartingPathIndex);
+                        zipEntryFile(origin, out, file, new File(zipInternalFolderPath, dir.getName()));
                     }
                 }
             }
         }
     }
 
-    private static void zipEntryFile(BufferedInputStream origin, ZipOutputStream out, File file, int relativeStartingPathIndex) throws IOException {
-        String relativePath = file.getAbsolutePath().substring(relativeStartingPathIndex);
+    private static void zipEntryFile(BufferedInputStream origin, ZipOutputStream out, File file, File zipInternalFolderPath) throws IOException {
+        String relativePath = zipInternalFolderPath != null ?
+                new File(zipInternalFolderPath, file.getName()).getAbsolutePath().substring(1) :
+                file.getName();
+
         ZipEntry entry = new ZipEntry(relativePath);
         entry.setTime(file.lastModified()); // to keep modification time after unzipping
         out.putNextEntry(entry);
