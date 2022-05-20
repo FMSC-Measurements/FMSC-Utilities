@@ -135,8 +135,10 @@ public class FileUtils {
             if(fileT.Item1.isDirectory()) {
                 zipSubDir(out, fileT.Item1, fileT.Item2);
             } else {
-                try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(fileT.Item1))) {
-                    zipEntryFile(origin, out, fileT.Item1, fileT.Item2);
+                if (fileT.Item1.exists()) {
+                    try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(fileT.Item1))) {
+                        zipEntryFile(origin, out, fileT.Item1, fileT.Item2);
+                    }
                 }
             }
         }
