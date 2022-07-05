@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.FileChannel;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -103,49 +104,6 @@ public class FileUtils {
     }
 
 
-
-    public static void zipFiles(File destZip, File... files) throws IOException {
-        if (destZip == null)
-            throw new NullPointerException("destZip");
-
-        FileOutputStream dest = new FileOutputStream(destZip);
-        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
-
-        for (File file : files) {
-            if(file.isDirectory()) {
-                zipSubDir(out, file, null);
-            } else {
-                try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(file))) {
-                    zipEntryFile(origin, out, file, null);
-                }
-            }
-        }
-
-        out.close();
-    }
-
-    public static void zipFiles(File destZip, Tuple<File, File>... files) throws IOException {
-        if (destZip == null)
-            throw new NullPointerException("destZip");
-
-        FileOutputStream dest = new FileOutputStream(destZip);
-        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
-
-        for (Tuple<File, File> fileT : files) {
-            if(fileT.Item1.isDirectory()) {
-                zipSubDir(out, fileT.Item1, fileT.Item2);
-            } else {
-                if (fileT.Item1.exists()) {
-                    try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(fileT.Item1))) {
-                        zipEntryFile(origin, out, fileT.Item1, fileT.Item2);
-                    }
-                }
-            }
-        }
-
-        out.close();
-    }
-
     public static void zipToFile(File source, File destZip) throws IOException {
         if (source == null)
             throw new NullPointerException("source");
@@ -165,6 +123,90 @@ public class FileUtils {
             }
         }
     }
+
+    public static void zipFiles(File destZip, List<File> files) throws IOException {
+        if (destZip == null)
+            throw new NullPointerException("destZip");
+
+        FileOutputStream dest = new FileOutputStream(destZip);
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+        for (File file : files) {
+            zipFile(file, out);
+        }
+
+        out.close();
+    }
+
+    public static void zipFiles(File destZip, File... files) throws IOException {
+        if (destZip == null)
+            throw new NullPointerException("destZip");
+
+        FileOutputStream dest = new FileOutputStream(destZip);
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+        for (File file : files) {
+            zipFile(file, out);
+        }
+
+        out.close();
+    }
+
+    public static void zipFilesT(File destZip, List<Tuple<File, File>> files) throws IOException {
+        if (destZip == null)
+            throw new NullPointerException("destZip");
+
+        FileOutputStream dest = new FileOutputStream(destZip);
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+        for (Tuple<File, File> fileT : files) {
+            zipFile(fileT, out);
+        }
+
+        out.close();
+    }
+
+    public static void zipFilesT(File destZip, Tuple<File, File>... files) throws IOException {
+        if (destZip == null)
+            throw new NullPointerException("destZip");
+
+        FileOutputStream dest = new FileOutputStream(destZip);
+        ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
+
+        for (Tuple<File, File> fileT : files) {
+            zipFile(fileT, out);
+        }
+
+        out.close();
+    }
+
+
+    private static void zipFile(File file, ZipOutputStream out) throws IOException {
+        if (file != null) {
+            if (file.isDirectory()) {
+                zipSubDir(out, file, null);
+            } else {
+                try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(file))) {
+                    zipEntryFile(origin, out, file, null);
+                }
+            }
+        }
+    }
+
+    private static void zipFile(Tuple<File, File> fileT, ZipOutputStream out) throws IOException {
+        if (fileT != null) {
+            if (fileT.Item1.isDirectory()) {
+                zipSubDir(out, fileT.Item1, fileT.Item2);
+            } else {
+                if (fileT.Item1.exists()) {
+                    try (BufferedInputStream origin = new BufferedInputStream(new FileInputStream(fileT.Item1))) {
+                        zipEntryFile(origin, out, fileT.Item1, fileT.Item2);
+                    }
+                }
+            }
+        }
+    }
+
 
     private static void zipSubDir(ZipOutputStream out, File dir, File zipInternalFolderPath) throws IOException {
         File[] files = dir.listFiles();
