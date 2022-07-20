@@ -247,12 +247,14 @@ public class FileUtils {
             ZipEntry ze;
             int count;
             byte[] buffer = new byte[8192];
+            final String targetCanonicalPath = targetDirectory.getPath();
             while ((ze = zis.getNextEntry()) != null) {
                 File file = new File(targetDirectory, ze.getName());
+                if (!file.getCanonicalPath().startsWith(targetCanonicalPath))
+                    throw new SecurityException("Invalid Unzip Path");
                 File dir = ze.isDirectory() ? file : file.getParentFile();
                 if (!dir.isDirectory() && !dir.mkdirs())
-                    throw new FileNotFoundException("Failed to ensure directory: " +
-                            dir.getAbsolutePath());
+                    throw new FileNotFoundException("Failed to ensure directory: " + dir.getAbsolutePath());
                 if (ze.isDirectory())
                     continue;
                 try (FileOutputStream fout = new FileOutputStream(file)) {

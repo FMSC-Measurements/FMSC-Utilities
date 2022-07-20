@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.util.Locale;
 
 public class StringEx {
     public static final String Empty = "";
