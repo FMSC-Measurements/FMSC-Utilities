@@ -247,7 +247,7 @@ public class FileUtils {
             ZipEntry ze;
             int count;
             byte[] buffer = new byte[8192];
-            final String targetCanonicalPath = targetDirectory.getPath();
+            final String targetCanonicalPath = targetDirectory.getCanonicalPath();
             while ((ze = zis.getNextEntry()) != null) {
                 File file = new File(targetDirectory, ze.getName());
                 if (!file.getCanonicalPath().startsWith(targetCanonicalPath))
